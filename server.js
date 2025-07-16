@@ -80,11 +80,8 @@ app.post('/api/ask', async (req, res) => {
 
     console.log('👉 Received question:', question);
 
-    // Simulate fetching live news (optional: skip this too if needed)
-    // const context = await getLiveContext(question); // ← You can disable this line
-
-    // Simulated response
-    const simulatedAnswer = `🧠 Simulated AI: You asked — "${question}". Here's a pretend answer!`;
+    // ✅ Simulated response only
+    const simulatedAnswer = `🧠 Simulated AI: You asked — "${question}". This is a pretend answer.`;
 
     return res.json({ answer: simulatedAnswer });
 
@@ -93,6 +90,7 @@ app.post('/api/ask', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 
