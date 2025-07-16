@@ -77,13 +77,16 @@ app.post('/api/ask', async (req, res) => {
 
     console.log('👉 Received question:', question);
 
-    // Simulate a static AI response
-    res.json({ answer: `🧠 Simulated AI says: "${question}" is a great question!` });
+    // Simulate response without calling Ollama
+    const answer = `🧠 Simulated AI says: "${question}" is a great question!`;
+    return res.json({ answer });
+
   } catch (err) {
     console.error('🔥 /api/ask error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // app.post('/api/ask', async (req, res) => {
