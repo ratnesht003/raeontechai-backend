@@ -76,44 +76,62 @@ app.post('/api/ask', async (req, res) => {
 
     console.log('👉 Received question:', question);
 
-    let context = await getLiveContext(question);
-
-    if (!context && vectorStore) {
-      const results = await vectorStore.similaritySearch(question, 3);
-      context = results.map(r => r.pageContent).join('\n');
-    }
-
-    const prompt = context
-      ? `Answer the question using the context below:\n\n${context}\n\nQuestion: ${question}`
-      : question;
-
-    const response = await fetch('http://localhost:11434/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'llama3',
-        stream: false,
-        messages: [{ role: 'user', content: prompt }]
-      }),
-      timeout: 20000
+    // Simulate response without using Ollama or OpenAI
+    res.json({
+      answer: `🧠 Simulated answer for: "${question}". AI is not connected right now.`
     });
 
-    const raw = await response.text();
-
-    try {
-      const json = JSON.parse(raw);
-      const answer = json?.message?.content || json?.response || '⚠️ No valid answer.';
-      res.json({ answer });
-    } catch (err) {
-      console.error('❌ JSON parse error:', err.message);
-      console.error('👉 Raw response:', raw);
-      res.status(500).json({ error: 'Failed to parse LLM response.', raw });
-    }
   } catch (err) {
     console.error('🔥 /api/ask error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
+// app.post('/api/ask', async (req, res) => {
+//   try {
+//     const { question } = req.body;
+//     if (!question) return res.status(400).json({ error: 'Missing question.' });
+
+//     console.log('👉 Received question:', question);
+
+//     let context = await getLiveContext(question);
+
+//     if (!context && vectorStore) {
+//       const results = await vectorStore.similaritySearch(question, 3);
+//       context = results.map(r => r.pageContent).join('\n');
+//     }
+
+//     const prompt = context
+//       ? `Answer the question using the context below:\n\n${context}\n\nQuestion: ${question}`
+//       : question;
+
+//     const response = await fetch('http://localhost:11434/api/chat', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({
+//         model: 'llama3',
+//         stream: false,
+//         messages: [{ role: 'user', content: prompt }]
+//       }),
+//       timeout: 20000
+//     });
+
+//     const raw = await response.text();
+
+//     try {
+//       const json = JSON.parse(raw);
+//       const answer = json?.message?.content || json?.response || '⚠️ No valid answer.';
+//       res.json({ answer });
+//     } catch (err) {
+//       console.error('❌ JSON parse error:', err.message);
+//       console.error('👉 Raw response:', raw);
+//       res.status(500).json({ error: 'Failed to parse LLM response.', raw });
+//     }
+//   } catch (err) {
+//     console.error('🔥 /api/ask error:', err.message);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 // ✅ Upload Endpoint (No OpenAI Required)
 app.post('/api/upload', upload.single('file'), async (req, res) => {
