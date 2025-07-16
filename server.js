@@ -69,6 +69,7 @@ async function getLiveContext(query) {
 }
 
 // ✅ Ask Endpoint (Ollama + News + Vector Fallback)
+// ✅ Ask Endpoint (Simulated response for demo)
 app.post('/api/ask', async (req, res) => {
   try {
     const { question } = req.body;
@@ -76,16 +77,14 @@ app.post('/api/ask', async (req, res) => {
 
     console.log('👉 Received question:', question);
 
-    // Simulate response without using Ollama or OpenAI
-    res.json({
-      answer: `🧠 Simulated answer for: "${question}". AI is not connected right now.`
-    });
-
+    // Simulate a static AI response
+    res.json({ answer: `🧠 Simulated AI says: "${question}" is a great question!` });
   } catch (err) {
     console.error('🔥 /api/ask error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // app.post('/api/ask', async (req, res) => {
 //   try {
