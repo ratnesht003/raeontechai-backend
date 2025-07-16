@@ -73,19 +73,27 @@ async function getLiveContext(query) {
 app.post('/api/ask', async (req, res) => {
   try {
     const { question } = req.body;
-    if (!question) return res.status(400).json({ error: 'Missing question.' });
+
+    if (!question) {
+      return res.status(400).json({ error: 'Missing question.' });
+    }
 
     console.log('👉 Received question:', question);
 
-    // Simulate response without calling Ollama
-    const answer = `🧠 Simulated AI says: "${question}" is a great question!`;
-    return res.json({ answer });
+    // Simulate fetching live news (optional: skip this too if needed)
+    // const context = await getLiveContext(question); // ← You can disable this line
+
+    // Simulated response
+    const simulatedAnswer = `🧠 Simulated AI: You asked — "${question}". Here's a pretend answer!`;
+
+    return res.json({ answer: simulatedAnswer });
 
   } catch (err) {
     console.error('🔥 /api/ask error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 
